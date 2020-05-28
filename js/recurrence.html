@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+     (function(){
+         //for forEach for...in  for...of的区别
+         //数组
+/*
+        const arr = [3,4,5,6,1,24,55,6];
+        for(let i=0;i<arr.length;i++){ //下标
+            console.log(i);
+        }
+        for(let i in arr){  //下标
+            console.log(i);
+        }
+        for(const v of arr){  //元素值
+            console.log(v)
+        }
+        console.log(typeof arr); //object
+        //for，for...in for...of forEach都可以遍历数组
+*/
+/*
+        const arr2 = ["a","b","c"];
+        arr2.test = 'bad';
+        console.log(arr2);
+        for(let i=0;i<arr2.length;i++){ //下标
+            console.log(i); //0,1,2
+        }
+        for(let i in arr2){  //下标
+            console.log(i); // 0,1,2,test
+        }
+        for(const v of arr2){  //元素值
+            console.log(v) //a,b,c
+        }
+        arr2.forEach((item,index) => {
+            console.log(item);//a,b,c
+            console.log(index);//0,1,2
+        })
+        //打印的结果看，for in 不会忽略非数字属性；所以for in不适合遍历数组
+*/
+/*
+        const arr3 = ['a',,'c'];
+        console.log(arr3.length); //3
+        for(let i=0;i<arr3.length;i++){
+            console.log(arr3[i]); //a,undefined,c
+        }
+        for(let i in arr3){
+            console.log(arr3[i]); //a,c
+        }
+        for(let i of arr3){
+            console.log(i); //a,undefined,c
+        }
+        arr3.forEach(item=>{
+            console.log(item); //a,c
+        })
+        //for与for of都不会忽略中间的值，并打印出undefined
+        //要点： for/in与forEach会跳过空元素，数组中的空元素被称为"holes"。如果你想避免这个问题，可以考虑禁用forEach      
+
+        console.log(JSON.parse('{"arr":["a","b","c"]}')); //{"arr":["a","b","c"]}
+        console.log(JSON.parse('{"arr":["a","null","c"]}'));//{"arr":["a","null","c"]}
+        console.log(JSON.parse('{"arr":["a","undefined","c"]}')); //{"arr":["a","undefined","c"]}
+        console.log(JSON.parse('{"arr":["a",,"c"]}')); //Uncaught SyntaxError: Unexpected token , in JSON at position 12
+        //JSON也不支持空元素，会报错
+*/
+
+        "use strict"  
+        const arr4 = ["a"];
+        arr4.forEach(function() {
+            console.log(this); // 严格模式的函数调用中为打印undefined，普通模式下为上级
+        });
+        arr4.forEach(() => {
+            console.log(this); // 严格模式的函数调用中为打印undefined
+        });
+        //for，for/in与for/of会保留外部作用域的this。
+        //对于forEach， 除非使用箭头函数，它的回调函数的 this 将会变化。
+        //forEach()不能与 Async/Await 及 Generators 很好的"合作"。
+        /*
+        async function run() {
+            const arr5 = ["a","b","c"];
+            arr5.forEach(itme => {
+                await new Promise(reslove => setTimeout(resolve, 1000));
+                console.log(item);
+            })
+        }
+        run();
+        //Uncaught SyntaxError: await is only valid in async function  会报错
+        */
+        /*
+        //不能在forEach回调函数中使用 yield
+        function* run2() {
+            const arr6 = ["a","b","c"];
+            arr6.forEach(itme => {
+                yield new Promise(reslove => setTimeout(resolve, 1000));
+                console.log(item);
+            }) 
+        }
+        run2();
+        //recurrence.html:99 Uncaught SyntaxError: Unexpected strict mode reserved word
+        */
+        //要点： 尽量不要在forEach中使用 aysnc/await 以及 generators。
+
+
+
+        /*
+        //for..of则没有上面的问题。
+        async function run3() {
+            const arr7 = ["a","b","c"];
+            for(const el of arr7){
+                await new Promise(resolve => setTimeout(resolve,1000));
+                console.log(el);
+            }
+        }
+        run3();
+        function* run4() {
+            const arr8 = ["a","b","c"];
+            for(const el of arr8){
+                yield new Promise(resolve => setTimeout(resolve,1000));
+                console.log(el);
+            }
+        }
+        run4();
+        */
+
+        /*
+        结论
+           简单地说，for/of是遍历数组最可靠的方式，它比for循环简洁，
+           并且没有for/in和forEach()那么多奇怪的特例。
+           for/of的缺点是我们取索引值不方便，而且不能这样链式调用forEach(). forEach()。
+        */
+        //使用for/of获取数组索引，可以这样写
+        for (const [i, v] of arr.entries()) {
+            console.log(i, v);
+        } 
+       
+        
+
+        /*
+        for...in  for...of 都可以遍历数组，
+        for...in会遍历所有可枚举的属性，包括原型；所以更适合遍历对象，而不是遍历数组。
+        for...of,更适合遍历数组，遍历的对象是数组的元素的值；
+        */
+        
+        //tips：
+        /*
+        1.for..of适用遍历数/数组对象/字符串/map/set等拥有迭代器对象的集合.
+        但是不能遍历对象,因为没有迭代器对象.
+        与forEach()不同的是，它可以正确响应break、continue和return语句。
+        2.for-of循环不支持普通对象，但如果你想迭代一个对象的属性，
+        你可以用for-in循环（这也是它的本职工作）或内建的Object.keys()方法：
+        */
+     
+
+
+     })()
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    (function(){
+        /*
+        async function timeout(){
+            return "hello async";
+        }
+        timeout().then(result => {
+            console.log(result);
+        })
+        //console.log(timeout());
+        async function asyncFn() {
+            return "我后执行";
+        };
+        asyncFn().then(result => {
+            console.log(result);
+        })
+        console.log("先执行");
+        //async会被定义为异步函数，不会影响后面正常的执行。
+
+        async function test() {
+            throw new Error("it's error");
+        };
+        test().then(success => console.log('成功了',success))
+              .catch(error => console.log("失败了",error));
+
+        async function throwStatus() {
+            return "show all";
+        };
+        throwStatus().then(success => console.log("成功",success))
+                     .catch(error => console.log("失败",error));
+        
+        async function fn() {
+            '这个值接收不到';
+        };
+        fn().then(success => console.log("成功",success))
+          .catch(error => console.log("失败",error));
+        //成功，undefined
+
+        async function fn2() {
+            return "这个值可以接收";
+        }
+        fn2().then(success => console.log("成功",success))
+             .catch(error => console.log("失败",error));
+        async function awaitReturn() {
+            return await 1;
+        };
+        awaitReturn().then(success => {console.log("成功",success)})
+                     .catch(error => {console.lot("失败",error)});
+        //成功 1
+
+        const timeoutFn = function(timeout){
+            return new Promise(resolve => {
+                return setTimeout(resolve,timeout);
+            })
+        }
+        async function fn3() {
+            await timeoutFn(1000);
+            await timeoutFn(2000);
+            return "完成";
+        }
+        fn3().then(success => console.log(success));
+*/
+
+
+        function testSometing() {
+            console.log("testSomething"); //2
+            return "return testSomething";
+        }
+        async function testAsync() {
+            console.log("testAsync"); //6
+            return Promise.resolve("hello async");
+        }
+        async function test() {
+            console.log("test start..."); //1
+            const testFn1 = await testSometing();
+            console.log(testFn1);  //5
+            const testFn2 = await testAsync();
+            console.log(testFn2); //8
+            console.log('test end...'); //9
+        }
+        test();
+        var promiseFn = new Promise((resolve)=> {
+                            console.log("promise START..."); //3
+                            resolve("promise RESOLVE"); //7
+                        });
+        promiseFn.then((val)=> console.log(val));
+        console.log("===END===") //4
+
+
+        //await 会让出线程，先执行下面的方法
+        //Promise执行resolve();会放入Promise队列
+        /*
+        async await 的特点
+        1.是一种编写异步代码的新方法。之前异步代码的方案是callback和promise。
+        2.建立在 promise 的基础上，与promise一样也是非阻塞的。
+        3.async/await 让异步代码看起来、表现起来更像同步代码。这正是其威力所在。
+        */
+
+
+
+
+    })();
+</script>
+</html>

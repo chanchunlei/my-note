@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+       var letterCombinations = function(digits) {
+            let map = ['', 1, 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz'];
+            let num = digits.split('');
+            let code = num.map(item => {
+                if(map[item]){
+                    return map[item];
+                }
+            });
+            let target = (arr) => {
+                let tmp = [];
+                if(arr.length==1){
+                    return arr[0].split('');
+                }else{
+                    for(let i=0;i<arr[0].length;i++){
+                        for(let j=0;j<arr[1].length;j++){
+                            tmp.push(`${arr[0][i]}${arr[1][j]}`);
+                        }
+                    }
+                }
+                arr.splice(0, 2, tmp); //把前两项去除，把tmp数组放过去；
+                if(arr.length>1){      //多于两个元素就递归；否则就输出
+                    target(arr);
+                }else{
+                    //console.log(tmp);
+                    return tmp;       
+                };
+                return arr[0];         //返回给函数体    
+            };
+            if(code.length == 0){ //输入空直接输出
+                return [];
+            }else{
+                return target(code);
+            }
+        }; 
+        letterCombinations("2345");
+        //调用这个函数，到判断条件那里开始递归了，然后递归到条件符合return；
+        //递归的几次方法里返回的tmp,所以是倒着来的，先正常return，最后回到了原先第一次循环之后tmp的值；
+        //然后第一个调用的target返回的刚好是arr[0],它不是临时值，一直在变;
+    </script>
+</body>
+</html>

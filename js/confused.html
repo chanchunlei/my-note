@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var add = function (x, r) {
+            if (arguments.length == 1) {
+                return function (y) { return x + y; };
+            } else {
+                return x + r;
+            };
+        };
+        console.log(add(2)(5));  // 7
+        console.log(add(2,5));  // 7
+
+        var out = 25,
+        inner = {
+                out: 20,
+                func: function () {
+                    var out = 30;
+                    return this.out;
+                }
+            };
+        console.log((inner.func,inner.func)());  //先返回这个方法，然后执行调用，是在window中调用
+        console.log(inner.func());  //直接执行返回结果，作用域是自己
+        console.log((inner.func)());//直接执行返回结果，作用域是自己
+        console.log((inner.func = inner.func)()); //返回的是一个方法，在window中调用的
+
+    </script>
+</body>
+</html>

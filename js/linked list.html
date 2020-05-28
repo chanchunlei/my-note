@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //创建一个链表类
+        /*
+        function LinkedList(){
+            //各种属性和方法的声明
+        }
+        */
+        /*需要一种数据结构保存链表中的数据
+        var Node = function(element){
+            this.element = element;
+            this.next = null;
+        }
+        Node类表要添加的元素，他有两个属性，一个是element，表示添加到链表中的具体的值；
+        另一个是next，表示要指向链表中下一个元素的指针。
+        */
+        /*
+        需要在给链表声明一些方法：
+        append(element)：向链表尾部添加一个新的元素；
+        insert(position,element):向链表特定位置插入元素；
+        remove(element):从链表移除一项；
+        indexOf(element):返回链表中某元素的索引，如果没有返回-1；
+        removeAt(position):从特定位置移除一项；
+        isEmpty():判断链表是否为空，如果为空返回true，否则返回false；
+        size():返回链表包含的元素个数；
+        toString():重写继承自Object类的toString()方法，因为我们使用了Node类；
+        */
+        //链表的完整代码、
+        function LinkedList() {
+            //Node类声明
+            let Node = function(element){
+                this.element = element;
+                this.next = null;
+            }
+            //初始化链表长度
+            let length = 0;
+            //初始化第一个元素
+            let head = null;
+            this.append = function(element){
+                //初始化添加的Node实例
+                let node = new Node(element),
+                    current;
+                if(head === null){
+                    //第一个Node实例进入链表，之后在这个LinkedList实例中head就不再是null了；
+                    head = node;
+                }else{
+                    current = head;
+                    //循环链表知道找到最后一项，循环结束current指向链表最后一项元素
+                    while(current.next){ //如果current.next有值，会进入循环
+                        current = current.next; //进入循环，拿下一个赋值
+                    }
+                    //找到最后一项元素后，将他的next属性指向新元素node，建立链接
+                    current.next = node;
+                }    
+                //更新链表长度
+                length++;
+            };
+            this.insert = function(position,element){ //特定位子插入
+                //检查是否越界，超过链表长度或是小于0不符合逻辑
+                if(position >= 0 && position <= length){
+                    let node = new Node(element),
+                        current = head,
+                        previous,
+                        index = 0;
+                    if(position === 0) {
+                        //在第一位置添加
+                        node.next = current;
+                        head = node;
+                    }else{
+                        //循环链表，找到正确位置，循环完毕，previous，current分别是被添加元素的前一个和后一个元素
+                        while(index++ < position){ //i++ ++i的区别
+                            previous = current;
+                            current = current.next;
+                        }
+                        node.next = current;
+                        previous.next = node;
+                    }
+                    //更新链表长度
+                    length++;
+                    return true;
+                }else{
+                    return false;
+                }
+            };
+            this.removeAt = function(position){ //特定位置移除
+                //检查是否越界，超过链表长度或是小于0肯定不符合逻辑的
+                if(position > -1 && position < length){
+                    let current = head,
+                        previous,
+                        index = 0;
+                    //移除第一个元素
+                    if(position == 0){
+                        //移除第一项，相当于head==null;
+                        head = current.next;
+                    }else{
+                        //循环链表，找到正确位置，循环完毕，previous，current分别是被添加元素的前一个和后一个元素
+                        while(index++ < position){
+                            previous = current;
+                            current = current.next;
+                        }
+                        //链接previous和current的下一个元素，也就是current移除了
+                        previous.next = current.next;
+                    }
+                    length--;
+                    return current.element;
+                }else{
+                    return null;
+                }
+            };
+            this.indexOf = function(element){ //某元素在链表中的索引
+                let current = head,
+                    index = 0;
+                //循环链表找到元素位置
+                while(current){
+                    if(element === current.element){
+                        return index;
+                    }
+                    index++;
+                    current = current.next;
+                }
+                return -1;
+            };
+            this.remove = function(element){ //移除某项
+                //调用已经声明过的indexOf和removeAt方法
+                let index = this.indexOf(element);
+                return this.removeAt(index);
+            };
+            this.isEmpty = function(){
+                return lenght === 0;
+            };
+            this.size = function(){
+                return length;
+            };
+            this.getHead = function(){
+                return head;
+            };
+            this.toString = function(){
+                let current = head,
+                    string = '';
+                while(current){
+                    string += current.element + (current.next ? ', ' : '');
+                    current = current.next;
+                }
+                return string;
+            };
+            this.print = function(){
+                console.log(this.toString());
+            };
+        }
+        //es6版本
+        let LinkedList2 = (function(){
+            class Node {
+                constructor(element){
+                    this.element = element;
+                    this.next = null;
+                }
+            }
+            //这里我们使用WeakMap对象来记录长度状态
+            //WeakMap 对象是一组键/值对的集合，其中的键是弱引用的。其键必须是对象，而值可以是任意的。
+            const length = new WeakMap();
+            const head = new WeakMap();
+            class LinkedList2 {
+                constructor() {
+                    length.set(this,0);
+                    head.set(this,null);
+                };
+                append(element) {
+                    let node = new Node(element),
+                        current;
+                    if(this.getHead() === null){
+                        head.set(this, node);
+                    } else {
+                        current = this.getHead();
+                        while(current.next) {
+                            current = current.next;
+                        }
+                        current.next = node;
+                    }
+                    let l = this.size();
+                    l++;
+                    length.set(this,l);
+                };
+                insert(position, element){
+                    if(position >= 0 && position <= this.size()) {
+                        let node = new Node(element),
+                            current = this.getHead(),
+                            previous,
+                            index = 0;
+                        if(position === 0){
+                            node.next = current;
+                            head.set(this, node);
+                        }else {
+                            while(index++ < position) {
+                                previous = current;
+                                current = current.next;
+                            }
+                            node.next = current;
+                            previous.next = node;
+                        }
+                        let l = this.size();
+                        l++;
+                        length.set(this, l);
+                        return true;
+                    }else {
+                        return false;
+                    }
+                };
+                removeAt(position) {
+                    if(position > -1 && position < this.size()){
+                        let current = this.getHead(),
+                            previous,
+                            index = 0;
+                        if(position === 0){
+                            head.set(this, current.next);
+                        }else {
+                            while(index++ < position){
+                                previous = current;
+                                current = current.next;
+                            }
+                            previous.next = current.next;
+                        }
+                        let l = this.size();
+                        l--;
+                        length.set(this, l);
+                        return current.element;
+                    }else {
+                        return null;
+                    }
+                };
+                remove(element) {
+                    let index = this.indexOf(element);
+                    return this.removeAt(index);
+                };
+                indexOf(element) {
+                    let current = this.getHead(),
+                        index = 0;
+                    while(current) {
+                        if(element === current.element){
+                            return index;
+                        }
+                        index++;
+                        current = current.next;
+                    }
+                    return -1;
+                };
+                isEmpty() {
+                    return this.size() === 0;
+                };
+                size() {
+                    return length.get(this);
+                };
+                getHead() {
+                    return head.get(this);
+                };
+                toString() {
+                    let current = this.getHead(),
+                        string = '';
+                    while(current) {
+                        string += current.element + (current.next ? ', ' : '');
+                        current = current.next;
+                    }
+                    return string;
+                };
+                print() {
+                    console.log(this.toString());
+                }
+            }
+            return LinkedList2;
+        })();
+
+        /*
+        双向链表：
+        双向链表和单项比起来就是Node类多了一个prev属性，
+        也就是每一个node不仅仅有一个指向它后面元素的指针也有一个指向它前面的指针。
+        */
+        /*
+        循环链表：
+        明白了前面的基础链表和双向链表之后这个肯定不在话下了，循环，
+        其实就是整个链表实例变成了一个圈，在单项链表中最后一个元素的next属性为null,
+        现在让它指向第一个元素也就是head，那么他就成了单向循环链表。
+        在双向链表中最后一个元素的next属性为null,现在让它指向第一个元素也就是head，
+        那么他就成了双向循环链表。就那么回事...
+        */
+
+    </script>
+</body>
+</html>

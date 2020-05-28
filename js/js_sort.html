@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>插入排序</title>
+</head>
+<body>
+<script>
+
+    let arr = [3,7,2,15,22,11,20,13];
+    /*
+    //冒泡排序
+    function bubbleSort(arr) {
+        var len = arr.length;
+        for(let i=0; i<len; i++) {
+            for(let j=i+1; j<len; j++) { //两层循环 将前面的数往后移
+                if(arr[i]>arr[j]) {
+                    [arr[i],arr[j]] = [arr[j],arr[i]]
+                }
+            }
+        }
+        return arr;
+    }
+    bubbleSort(arr);
+
+    //选择排序
+    function selectionSort(arr) {
+        let len = arr.length;
+        let minIndex;
+        for(var i=0; i<len; i++) {
+            minIndex = i;
+            for(var j = i+1; j<len; j++) {
+                if(arr[j]<arr[minIndex]) {
+                    minIndex = j; //找到最小值的下标
+                }
+            }
+            [arr[i],arr[minIndex]] = [arr[minIndex],arr[i]]; //跟循环到的最小数字换位置
+        }
+        return arr;
+    }
+    console.log(selectionSort(arr));
+
+    //插入排序
+    function insertionSort(arr) {
+        var len = arr.length;
+        var preIndex, current;
+        for (var i = 1; i < len; i++) {
+            preIndex = i - 1;
+            current = arr[i];
+            while(preIndex >= 0 && arr[preIndex] > current) {
+                arr[preIndex+1] = arr[preIndex];
+                preIndex--;
+            }
+            arr[preIndex+1] = current; //将对应的值放到正确的位置
+        }
+        return arr;
+    }
+    insertionSort(arr);
+
+
+    //归并排序
+    function mergeSort(arr) {
+        let len = arr.length;
+        if(len < 2) {
+            return arr;
+        }
+        let middle = Math.floor(len/2),
+            left = arr.slice(0,middle),
+            right = arr.slice(middle);
+        return merge(mergeSort(left),mergeSort(right));//自上而下递归
+    }
+    function merge(left,right){
+        let result = [];
+        while(left.length && right.length) { //两两对比
+            if(left[0]>=right[0]){
+                result.push(right.shift());
+            }else {
+                result.push(left.shift());
+            }
+        }
+        while(left.length) {
+            result.push(left.shift());
+        }
+        while(right.length) {
+            result.push(right.shift());
+        }
+        return result;
+    };
+    mergeSort(arr);
+    */
+
+
+    //快速排序
+    function quickSort(arr) {
+        if(arr.length<=1) {
+            return arr;
+        }
+        var pivotIndex = Math.floor(arr.length/2);
+        var pivot = arr.splice(pivotIndex,1)[0]; //去掉基准值
+        var left = [];
+        var right = [];
+        for(let i=0; i<arr.length; i++) {
+            if(arr[i]>pivot){
+                right.push(arr[i]);
+            }else {
+                left.push(arr[i]);
+            }
+        };
+        return quickSort(left).concat([pivot],quickSort(right));
+    };
+    console.log(quickSort(arr));
+
+
+
+
+</script>
+</body>
+</html>

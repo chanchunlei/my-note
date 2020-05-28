@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        栈是一种遵从后进先出原则的有序集合，新添加的或是等待删除的元素
+        都保存在栈的末尾，但是我们称为栈顶，而另一端我们称作栈底。
+        栈：例如一摞书，拿掉或者添加一本书的时候都是最上面的。也就是
+        栈顶元素都是待删除和待添加的。这就是后进先出的例子。
+        */
+        /*j
+        s模拟栈
+        function Stack(){
+            //各种属性和方法的声明
+        }
+        我们需要一种数据结构来保存栈里的数据
+        var items = [];
+        */
+        /*
+        要给栈声明一些方法：
+        push(element):添加一个或是几个新元素到栈顶。
+        pop():移除栈顶的元素，同时返回被移除元素。
+        peek():返回栈顶的元素，但并不对栈顶元素做出任何的修改。
+        isEmpty():检查栈内是否有元素，如果有返回false，没有返回true。
+        clear():清除栈里的元素。
+        size():返回栈的元素个数。
+        print():打印栈里的元素。
+        */
+        //实现栈的完整代码
+        function Stack() {
+            var items = [];
+            this.push = function(element){//栈顶添加元素
+                items.push(element);
+            };
+            this.pop = function(){ //去掉栈顶元素
+                items.pop();
+            };
+            this.peek = function(){ //返回栈顶最后一个元素，不做任何操作
+                return items[items.length -1];
+            };
+            this.isEmpty = function(){ //判断栈是否为空，是则返回true，否则返回false
+                return items.length == 0;
+            };
+            this.size= function(){ //返回栈的长度
+                return items.length;
+            };
+            this.clear = function(){ //清除栈中的元素
+                items = [];
+            };
+            this.print = function(){ //打印栈里的元素
+                console.log(items.toString());
+            };
+            this.toString = function(){ //返回字符串
+                return items.toString();
+            }
+        }
+        var stack = new Stack();
+        console.log(stack.isEmpty()); //是空 true
+        stack.push(1);
+        stack.push(3);
+        console.log(stack.peek()); //3
+        console.log(stack.size()); //2
+        /*
+        队列
+        我们已经接触了栈，接下来要说的队列和栈十分相似，他们都是线性表，元素都是有序的。
+        队列和栈不同的是，队列遵循的是FIFO，也就是先进先出的原则。队列从尾部添加新元素，
+        从顶部移除元素，最新添加的元素必须排列在队列的末尾。
+        队列就如同排队一样，先进先出；但新添加的会在队列的尾部。
+        */
+
+
+    </script>
+</body>
+</html>
