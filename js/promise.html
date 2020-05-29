@@ -6,7 +6,39 @@
 </head>
 <body>
 <script>
-    
+    function learn() {
+        return new Promise((resolve,reject) => {
+            let a = Math.ceil(Math.random() * 10);
+            if(a > 5) {
+                resolve(a);
+            }else {
+                reject(a);
+            }
+        })
+    };
+
+    // learn().then((data) => {
+    //     console.log(data);
+    //     return learn();
+    // }).then((data) => {
+    //     console.log(data);
+    // }).catch((err) => {
+    //     console.log(err);
+    // });
+
+    //以上为简单用法
+
+    Promise.all([learn(),learn()]).then((values) => {
+        let [data1,data2] = values;
+        console.log('都成功了！');
+        console.log([data1,data2]);
+    }).catch((err) => {
+        console.log('至少一个返回错误了！');
+        console.log(err);
+    })
+
+
+
 </script>
 </body>
 </html>
