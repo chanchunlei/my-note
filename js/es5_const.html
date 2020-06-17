@@ -5,6 +5,49 @@
     <title>Title</title>
 </head>
 <body>
+<script>
 
+    //const不可以改变指向的地址,如果不改变地址,改变属性上的值是可以被修改的
+    //可以使用Object.freeze();来防止引用类型的时候属性被修改的情况
+
+    //es6之前声明常量
+    //1.假装是常量
+    //var BASE_COLOR = '#F0F0F0';
+    //2.Object.defineProperty();
+    // var CST = {};
+    // Object.defineProperty(CST, 'BASE_NAME', { //小明是只读的
+    //     value: '小明',
+    //     writable: false
+    // });
+    // Object.seal(CST);//方法封闭一个对象，阻止添加新属性并将所有现有属性标记为不可配置。当前属性的值只要原来是可写的就可以改变
+
+    Object.defineProperty(Object, 'freezePolyfill', {
+        value: function(obj) {
+            for(var i in obj) {
+                if(obj.hasOwnProperty(i)) { //是否是自带的属性
+                    Object.defineProperty(obj, i, {
+                        writable: false
+                    })
+                }
+            }
+            Object.seal(obj)
+        }
+    });
+
+    var cst = {
+        name: 'chunlei',
+        age: 26
+    };
+    Object.freezePolyfill(cst);
+
+
+    //Object.freeze()
+    // 方法可以冻结一个对象。
+    // 一个被冻结的对象再也不能被修改；冻结了一个对象则不能向这个对象添加新的属性，
+    // 不能删除已有属性，不能修改该对象已有属性的可枚举性、可配置性、可写性，以及不能修改已有属性的值。
+    // 此外，冻结一个对象后该对象的原型也不能被修改。freeze() 返回和传入的参数相同的对象。
+
+
+</script>
 </body>
 </html>

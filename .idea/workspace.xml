@@ -4,10 +4,10 @@
     <list default="true" id="751f1a68-bf90-4755-834d-18484dcef9b0" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../learning/Plan outline.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../learning/开课吧全栈/001/001html.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/es5_const.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../react-blog" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../英语单词.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/achieve_primise.html" beforeDir="false" afterPath="$PROJECT_DIR$/js/achieve_promise.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,11 +29,27 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/refactor_promise.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
+            <state relative-caret-position="450">
               <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/js/js_sort.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-226" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/js/es5_const.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-287">
+              <caret line="10" column="44" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -81,6 +97,7 @@
         <option value="$PROJECT_DIR$/js/refactor_primise.html" />
         <option value="$PROJECT_DIR$/js/refactor_promise.html" />
         <option value="$PROJECT_DIR$/js/achieve_promise.html" />
+        <option value="$PROJECT_DIR$/js/es5_const.html" />
       </list>
     </option>
   </component>
@@ -95,7 +112,22 @@
     </navigator>
     <panes>
       <pane id="ProjectPane" />
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="note" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="note" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="js" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -140,12 +172,12 @@
       <workItem from="1589960176197" duration="8355000" />
       <workItem from="1590070245455" duration="9684000" />
       <workItem from="1590659221822" duration="23525000" />
-      <workItem from="1592357095991" duration="168000" />
+      <workItem from="1592357095991" duration="4663000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42705000" />
+    <option name="totallyTimeSpent" value="47200000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -158,8 +190,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17758985" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17758985" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -171,7 +204,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32914925" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32914925" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2060241" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2060241" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -282,7 +315,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/node/server/register.html" />
-    <entry file="file://$PROJECT_DIR$/js/js_sort.html" />
     <entry file="file://$PROJECT_DIR$/js/async await.html" />
     <entry file="file://$PROJECT_DIR$/js/安装本地服务器的副本.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -331,8 +363,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/refactor_promise.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
+        <state relative-caret-position="450">
           <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/leetcode/3. 无重复字符的最长子串.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/js_sort.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-226" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/es5_const.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-287">
+          <caret line="10" column="44" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
         </state>
       </provider>
     </entry>
