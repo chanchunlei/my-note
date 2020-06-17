@@ -144,6 +144,8 @@
             return 2;
         }, function(reason) {
             throw new Error('something went wrong')
+        }).catch((e) => {
+            console.log(e);
         })
 
 
