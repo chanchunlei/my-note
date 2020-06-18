@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    //面向对象
+    //es6中的类
+
+/*
+
+    class Car {
+        //构造函数
+        //实例化
+        constructor(wheel,color,length,width) {
+            console.log('开始了');
+            this.wheel = wheel;
+            this.color = color;
+            this.length = length;
+            this.width = width;
+            this.speed = 0;
+        }
+
+        speedUp() {
+            this.speed += 1;
+        }
+
+
+    }
+    const car = new Car(4,'蓝色',3,1.5);
+    console.log(car.speed);
+    car.speedUp();
+    console.log(car.speed);
+    //属性
+    //方法
+*/
+
+    //静态属性与静态方法
+    //1.不会被类实例所拥有的属性与方法,只是类自身拥有
+    //2.只能通过类调用
+    //static(只能用于静态方法)
+
+    class Car {
+        constructor() {
+            Car.total += 1;
+            this.speed = 0;
+        }
+        speedUP() {
+            this.speed++;
+        }
+        static repair(car) {
+            console.log('静态方法');
+            console.log(`修理${car}`)
+        }
+    }
+    Car.total = 0; //静态属性
+
+
+    Car.repair('一号车')
+    // const car = new Car();
+    // car.repair('一号车'); //访问不到
+
+
+    const Preson = class P {
+        constructor() {
+            P.age = 26;
+            console.log('函数')
+        }
+    }
+
+
+
+</script>
+</body>
+</html>
