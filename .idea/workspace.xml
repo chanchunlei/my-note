@@ -4,9 +4,9 @@
     <list default="true" id="751f1a68-bf90-4755-834d-18484dcef9b0" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/../learning/Plan outline.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../learning/开课吧全栈/001/001html.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../react-blog" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../英语单词.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/es6_class.html" beforeDir="false" afterPath="$PROJECT_DIR$/js/es6_class.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/achieve_promise.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2232">
-              <caret line="124" column="28" selection-start-line="124" selection-start-column="28" selection-end-line="124" selection-end-column="28" />
+            <state relative-caret-position="1998">
+              <caret line="111" column="58" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -39,15 +39,13 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/js_sort.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-226" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/es5_const.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
+            <state relative-caret-position="720">
               <caret line="40" column="25" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="25" />
             </state>
           </provider>
@@ -56,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/es6_class.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="52" column="28" lean-forward="true" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+            <state relative-caret-position="198">
+              <caret line="56" column="5" lean-forward="true" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -110,9 +108,10 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1393" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -120,7 +119,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -131,12 +129,13 @@
             <path>
               <item name="note" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="js" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="leetcode" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -181,12 +180,14 @@
       <workItem from="1589960176197" duration="8355000" />
       <workItem from="1590070245455" duration="9684000" />
       <workItem from="1590659221822" duration="23525000" />
-      <workItem from="1592357095991" duration="10858000" />
+      <workItem from="1592357095991" duration="13518000" />
+      <workItem from="1592731637451" duration="436000" />
+      <workItem from="1592756601190" duration="77000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53395000" />
+    <option name="totallyTimeSpent" value="56568000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -198,10 +199,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="0" y="23" width="1393" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17758985" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1771137" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -213,7 +214,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32914925" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32914925" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2060241" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.20509554" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -363,10 +364,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/leetcode/3. 无重复字符的最长子串.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/achieve_promise.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2232">
-          <caret line="124" column="28" selection-start-line="124" selection-start-column="28" selection-end-line="124" selection-end-column="28" />
+        <state relative-caret-position="1998">
+          <caret line="111" column="58" selection-start-line="111" selection-start-column="58" selection-end-line="111" selection-end-column="58" />
         </state>
       </provider>
     </entry>
@@ -377,30 +386,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/leetcode/3. 无重复字符的最长子串.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/js_sort.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-226" />
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/js/es5_const.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
+        <state relative-caret-position="720">
           <caret line="40" column="25" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/es6_class.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="52" column="28" lean-forward="true" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
+        <state relative-caret-position="198">
+          <caret line="56" column="5" lean-forward="true" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
         </state>
       </provider>
     </entry>
