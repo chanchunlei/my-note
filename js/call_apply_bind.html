@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		 //call() 方法使用一个指定的 this 值和单独给出的一个或多个参数来调用一个函数。
+		 //apply() 方法调用一个具有给定this值的函数，以及以一个数组（或类数组对象）的形式提供的参数。
+		 //两者区别就是参数不同
+		 //call apply的核心要点就是传入的context，给context添加fn的属性值并等于当前this；运行fn,改变this指向context。
+		 Function.prototype.myCall = function(content) {
+		 	content = content || window;
+		 	// console.log(content); //传过来指定的this
+		 	// console.log(this); //指向调用的对象
+		 	content.fn = this; 
+		 	let args = [...arguments].splice(1); 
+		 	let result = content.fn(...args);
+		 	delete content.fn;
+		 	return result;
+		 };
+		 Function.prototype.myApply = function(context) {
+		 	if (typeof this !== 'function') {
+		        throw new TypeError('Error')
+		    }
+		 	context = context || window;
+		 	context.fn = this;
+		 	let result;
+		 	if(arguments[1]) {
+		 		result = context.fn(...arguments[1]);
+		 	}else {
+		 		result = context.fn();
+		 	}
+		 	delete context.fn;
+		 	return result;
+		 }
+
+
+
+
+
+
+
+		function Product(name, price) {
+		  this.name = name;
+		  this.price = price;
+		  console.log(this)
+		}
+
+		function Food(name, price) {
+		  console.log(this);
+		  Product.myCall(this, name, price);
+		  this.category = 'food';
+		  console.log(this)
+		}
+
+		console.log(new Food('cheese', 5).name);
+
+	</script>
+</body>
+</html>

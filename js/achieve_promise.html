@@ -7,7 +7,6 @@
 <body>
     <script>
         //因为标准并没有指定如何构造一个Promise对象，所以我们同样以目前一般Promise实现中通用的方法来构造一个Promise对象，也是ES6原生Promise里所使用的方式：
-
         //Promise构造函数接受一个executor函数，executor函数执行完同步或异步操作后，调用它的两个参数resolve和reject
         var promise = new Promise(function(resolve,reject){
             /*
@@ -16,6 +15,7 @@
         });
         //我们先实现构造函数的框架如下：
         function Promise(executor) {
+            console.log(this)
             var self = this;
             self.status = 'pending'; // Promise 当前的状态
             self.data = undefined; // Promise的值

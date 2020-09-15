@@ -81,6 +81,9 @@
             console.log("testAsync"); //6
             return Promise.resolve("hello async");
         }
+        setTimeout(function(){
+            console.log('setTimeout') //10
+        },0)
         async function test() {
             console.log("test start..."); //1
             const testFn1 = await testSometing();
