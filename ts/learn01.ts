@@ -8,5 +8,4 @@ function greeter(person:string):string {
 }
 greeter(user);
 
-
-    export {} //不报错
+export {} //不报错

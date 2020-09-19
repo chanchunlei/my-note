@@ -42,6 +42,46 @@
 
 		 //bind()方法创建一个新的函数，在bind()被调用时，这个新函数的this被指定为bind()的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
 
+		//  Yes, it does work with `new (funcA.bind(thisArg, args))`
+		if (!Function.prototype.bind) (function(){
+		  
+		  Function.prototype.bind = function(otherThis) {
+		    if (typeof this !== 'function') {
+		      // closest thing possible to the ECMAScript 5
+		      // internal IsCallable function
+		      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+		    }
+		    //arguments并不是真正的数组对象，只是与数组类似而已，所以它并没有slice这个方法
+		    //Array.prototype.slice.call(arguments, 1)可以理解成是让arguments转换成一个数组对象
+		    var baseArgs= Array.prototype.slice.call(arguments, 1),
+		        baseArgsLength = baseArgs.length,
+		        fToBind = this,
+		        fNOP    = function() {},
+		        fBound  = function() {
+		          baseArgs.length = baseArgsLength; // reset to default base arguments
+		          baseArgs.push.apply(baseArgs, arguments);
+		          return fToBind.apply(
+		                 fNOP.prototype.isPrototypeOf(this) ? this : otherThis, baseArgs
+		          );
+		        };
+
+		    if (this.prototype) {
+		      // Function.prototype doesn't have a prototype property
+		      fNOP.prototype = this.prototype; 
+		    }
+		    fBound.prototype = new fNOP();
+
+		    return fBound;
+		  };
+		})();
+		//isPrototypeOf() 方法用于测试一个对象是否存在于另一个对象的原型链上。
+		//isPrototypeOf() 与 instanceof 运算符不同。在表达式 "object instanceof AFunction"中，object 的原型链是针对 AFunction.prototype 进行检查的，而不是针对 AFunction 本身。
+
+
+
+
+
+
 
 
 
