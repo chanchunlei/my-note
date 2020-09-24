@@ -1,4 +1,4 @@
-#### 手写call、apply、bind
+手写call、apply、bind
 
 1. 手写call
 
