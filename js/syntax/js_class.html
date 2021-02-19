@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Preson(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        Preson.prototype.running = function() {
+            console.log(this.name, this.age);
+        }
+        var p = new Preson("why", 18);
+        p.running();
+
+        //es6
+        class P {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+            running() {
+                console.log(this.name);
+                console.log(this.age);
+            }
+        }
+        const p2 = new P("what", 19);
+        p2.running();
+
+        let fun = p2.running;
+        let obj = {
+            name: "kobe",
+            age: 44
+        }
+        fun = fun.bind(obj);
+        fun();
+
+    </script>
+</body>
+</html>

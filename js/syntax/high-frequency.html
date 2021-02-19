@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		Function.prototype.mycall = function(context, ...argus) {
+        if(typeof this !== "function") throw new TypeError("not function");
+        context = context || window;
+        context.fn = this;
+        const result = context.fn(...argus);
+        delete context.fn;
+        return result;
+    }
+    Function.prototype.myapply = function(context, arr) {
+        if(typeof this !== "function") throw new TypeError("not function");
+        context = context || window;
+        context.fn = this;
+        const result = context.fn(...arr);
+        delete context.fn; 
+        return result;
+    }
+    Function.prototype.mybind = function(context, ...argus) {
+        if(typeof this !== "function") throw new TypeError("not function");
+        const _this = this;
+        return function F() {
+            if(this instanceof F) {
+                return new _this(...argus, ...arguments);
+            }
+            return _this.myapply(context, [...argus, ...arguments]);
+        }
+    }
+
+    //节流 
+    const debounce = function(fn, delay) {
+      let timeout = null;
+      return function(...argus) {
+        if(timeout) clearTimeout(timeout);
+        const context = this;
+        timeout = setTimeout(function(){
+          fn.apply(context, [...argus]);
+        }, delay)
+      }
+    }
+    //防抖
+    const throttle = function(fn, delay) {
+      let flag = true;
+      return function(...argus) {
+        if(!flag) return;
+        flag = false;
+        const context = this;
+        setTimeout(function() {
+          fn.apply(context, [...argus]);
+        }, delay);
+      }
+    }
+
+    //深拷贝简易版
+    //hasOwnProperty
+    const deepClone = function(target) {
+      if(typeof target !== "object" || target === null) return target;
+      const cloneTarget = Array.isArray(target) ? [] : {};
+      for(let prop in target) {
+        if(target.hasOwnProperty(prop)) {
+          cloneTarget[prop] = deepClone(target[prop]);
+        }
+      }
+      return cloneTarget;
+    }
+    //const a = {val:2};
+    //a.target = a;
+
+    //上面依旧不能处理递归y引用
+    //改进使用Map
+    //WeakMap
+    const isObject = (target) => (typeof target === "object" || typeof target === "function") && target !== null;
+    const deepCloneV2 = function(target, map = new WeakMap()) {
+      if(map.get(target)) return target;
+      if(isObject(object)){
+        map.set(target, true);
+        const cloneTarget = Array.isArray(target) ? [] : {};
+        for(let prop in target) {
+          if(target.hasOwnProperty(prop)) {
+            cloneTarget[prop] = deepCloneV2(target[prop], map);
+          }
+        }
+        return cloneTarget;
+      } else {
+        return target;
+      }
+    }
+
+    //浅拷贝 
+    const shallowClone = function(target) {
+      if(typeof target !== "object" || target === null) return target;
+      const cloneTarget = Array.isArray(target) ? [] : {};
+      for(let prop in target) {
+        if(target.hasOwnProperty(prop)) {
+          cloneTarget[prop] = target[prop];
+        }
+      }
+      return cloneTarget;
+    }
+    
+
+  //数组扁平化
+
+  const flatten = function(arr, result = [], depth) {
+    if(typeof depth === "number") {
+      for(let i=0; i<arr.length; i++) {
+        const item = arr[i];
+        (Array.isArray(item) && depth !== 0) ? flatten(item, result, depth-1) : result.push(item);
+      }
+    }else {
+      for(let i=0; i<arr.length; i++) {
+        const item = arr[i];
+        Array.isArray(item) ? flatten(item, result) : result.push(item); 
+      }
+    }
+    return result;
+  }
+  let arr = [1,[2,[3,[4,[5],[6],[7]],8,[9,10,11]]]];
+  console.log(flatten(arr, [], 3));
+
+  const flattenV2 = function(arr, result=[], depth) {
+    for(let i=0; i<arr.length; i++) {
+      const item = arr[i];
+      typeof depth === "number" 
+        ? (Array.isArray(item) && depth !== 0) 
+          ? flattenV2(item, result, depth-1) 
+          : result.push(item) 
+        : Array.isArray(item) 
+          ? flattenV2(item, result) 
+          : result.push(item);
+    }
+    return result;
+  }
+  console.log(flattenV2(arr, []));
+  
+  //发布订阅
+  function eventEmitter () {
+    this.events = {}；
+  }
+  eventEmitter.prototype.on = function(eventName, callback) {
+    if(!this.events[eventName]) {
+      this.events[eventName] = [callback];
+    }else {
+      this.events[eventName].push(callback);
+    }
+  } 
+  eventEmitter.prototype.emit = function(eventName) {
+    this.events[eventName] && this.events[eventName].forEach(fn => fn());
+  }
+
+  
+
+
+
+
+//review 
+  const debounceR2 = function(fn, delay) { //防抖
+    let timeout = null;
+    return function(...argus) {
+      if(timout) clearTimeout(timeout);
+      const context = this;
+      timeout = setTimeout(function() {
+        fn.apply(context, [...argus])
+      }, delay)
+    }
+  }
+  const throttleR2 = function(fn, delay) {
+    let flag = true;
+    return function(...argus) {
+      if(!flag) return;
+      flag = false;
+      const context = this;
+      setTimeout(function() {
+        fn.apply(context, [...argus]);
+      }, delay)
+    }
+  }
+
+  Function.prototype.myapplyR2 = function(context, arr) {
+    if(typeof this !== "function") throw new TypeError("not function");
+    context = context || window;
+    context.fn = this;
+    const result = context.fn(...arr);
+    delete context.fn;
+    return result;
+  }
+  Function.prototype.mybindR2 = function(context, ...argus) {
+    if(typeof this !== "function") throw new TypeError("not function");
+    const _this = this;
+    return function F() {
+      if(this instanceof F) {
+        return new _this(...argus, ...arguments);
+      }
+      return _this.myapplyR2(context, [...argus, ...arguments]);
+    }
+  }
+
+  const deepCloneR2 = function(target, map = new Map()) {
+    if(map.get(target) || typeof target !== "object" || target === null) return target;
+    map.set(target, true);
+    const cloneTarget = Array.isArray(target) ? [] : {};
+    for(let prop in target) {
+      if(target.hasOwnProperty(prop)) {
+        cloneTarget[prop] = deepCloneR2(target[prop]);
+      }
+    }
+    return cloneTarget;
+  }
+
+  function eventEmitterR2() { //发布订阅
+    this.events = {};
+  }
+  eventEmitterR2.prototype.on = function(eventName, callback) {
+    if(!this.events[eventName]) {
+      this.events[eventName] = [callback];
+    }else {
+      this.events[eventName].push(callback);
+    }
+  }
+  eventEmitterR2.prototype.emit = function(eventName) {
+    this.events[eventName] && this.events[eventName].forEach(fn => fn());
+  }
+
+        
+	</script>
+
+</body>
+</html>
