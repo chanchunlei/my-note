@@ -7,13 +7,13 @@
 </head>
 <body>
 <script>
+
+	//js控制并发
 	const wait = () => {
 		return new Promise((resolve) => {
 			setTimeout(resolve, 1000 * Math.random());
 		})
 	} 
-		
-	
 	const multiRequest = (urls, max = 1) => {
 		return new Promise((resolve, reject) => {
 			let rest = urls.slice();
@@ -23,7 +23,6 @@
 
 			const request = async (idx) => {
 				if(rest.length === 0) return;
-
 				//维护本次请求对应数组的下标
 				currentIndex++;
 				const url = rest.shift();
@@ -40,6 +39,8 @@
 				if(finished === urls.length) return resolve(res);
 
 				//没请求完递归
+				//本次完成进入下一个
+				console.log(currentIndex)
 				request(currentIndex);
 			}
 
@@ -49,28 +50,183 @@
 
 		})
 	}
+	// multiRequest(["1", "2", "3", "4", "5", 6, 7, 8, 9, 10], 3).then((res) =>
+	//     // console.log("res", res),
+	//   )
+ 
 
-	console.log(
-	  multiRequest(["1", "2", "3", "4", "5", 6, 7, 8, 9, 10], 3).then((res) =>
-	    console.log("res", res),
-	  ),
-	)
-
-	class eventEmitter {
+    //发布订阅
+	class eventEmitter { 
 		constructor() {
 			this.events = {};
 		}
 		on(eventName, callback) {
-			if(!this.events[eventName]) {
-				this.events[eventName] = [callback];
+			if(this.events[eventName]) {
+				this.events[eventName].push(callback);
 			}else {
-				this.events[eventName].push([callback]);
+				this.events[eventName] = [callback];
 			}
 		}
 		emit(eventName) {
 			this.events[eventName] && this.events[eventName].forEach(fn => fn());
 		}
 	}
+
+
+	const PENDING = "PENDING";
+	const FULFILLED = "FULFILLED";
+	const REJECTED = "REJECTED";
+	class MyPromise {
+		constructor(executor) {
+			this.status = PENDING;
+			this.value = undefined;
+			this.reason = undefined;
+			this.onResolvedCallbacks = [];
+			this.onRejectedCallbacks = [];
+			let resolve = (value) => {
+				if(this.status === PENDING) {
+					this.status = FULFILLED;
+					this.value = value;
+					this.onResolvedCallbacks.forEach(fn => fn())
+				}
+			}
+			let reject = (reason) => {
+				if(this.status === PENDING) {
+					this.status = REJECTED;
+					this.reason = reason;
+					this.onRejectedCallbacks.forEach(fn => fn())
+				}
+			}
+			try {
+				executor(resolve, reject);
+			}catch(e) {
+				reject(e);
+			}
+		}
+		then(onResolved, onRejected) {
+			const self = this;
+			let promise2;
+			onResolved = typeof onResolved === 'function' ? onResolved : v => v;
+			onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
+			if(self.status === FULFILLED) {
+				return promise2 = new MyPromise((resolve,reject) => {
+					try {
+						const x = onResolved(self.value);
+						if(x instanceof MyPromise) x.then(resolve, reject);
+						resolve(x);
+					}catch (e) {
+						reject(e);
+					}
+				})
+			}
+			if(self.status === REJECTED) {
+				return promise2 = new MyPromise((resolve,reject) => {
+					try {
+						const x = onRejected(self.reason);
+						if(x instanceof MyPromise) x.then(resolve, reject);
+					}catch (e) {
+						reject(e);
+					}
+				})
+			}
+			if(self.status === PENDING) {
+				return promise2 = new MyPromise((resolve,reject) => {
+					self.onResolvedCallbacks.push(() => {
+						try {
+							const x = onResolved(self.value);
+							if(x instanceof MyPromise) x.then(resolve, reject);
+							resolve(x);
+						}catch (e) {
+							reject(e);
+						}
+					})
+					self.onRejectedCallbacks.push(() => {
+						try {
+							const x = onRejected(self.reason);
+							if(x instanceof MyPromise) x.then(resolve, reject);
+						}catch (e) {
+							reject(e);
+						}
+					})
+				})
+			}
+		}
+		catch(onRejected) {
+			return this.then(null, onRejected);
+		}
+		static resolve(value) {
+			if(value instanceof MyPromise) return value;
+			return new MyPromise((resolve, reject) => {
+				resolve(value);
+			})
+		}
+		static all(values) {
+			if(Array.isArray(values)) {
+				return new MyPromise((resolve, reject) => {
+					let idx = 0;
+					let result = [];
+					for(let i=0; i<values.length; i++) {
+						MyPromise.resolve(values[i]).then(res => {
+							result[i] = res;
+							idx++;
+							if(idx === values.length) resolve(result);
+						}).catch(e => {
+							reject(e);
+						})
+					}
+					
+				})
+			}else {
+				return new TypeError("not array")
+			}
+		}
+		static race(values) {
+			if(Array.isArray(values)) {
+				return new MyPromise((resolve, reject) => {
+					for(let i=0; i<values.length; i++) {
+						MyPromise.resolve(values[i]).then(res => {
+							return resolve(res);
+						}).catch(err => {
+							return reject(res);
+						})
+					}
+				})
+			}else {
+				return new TypeError("not array")
+			}
+		}
+	}
+	const jest = new MyPromise((resolve,reject) => {
+		setTimeout(function(){
+			reject('err')
+		}, 1000);
+	})
+	jest.then().then().catch(e => {
+		console.log(e);
+	})
+
+	const jest1 = new MyPromise((resolve, reject) => {
+   		setTimeout(() => {
+			resolve("done")
+		}, 500);
+	})
+   const jest2 = new MyPromise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("done2")
+		}, 1000);
+	})
+   const jest3 = new MyPromise((resolve, reject) => {
+		setTimeout(() => {
+			resolve("done3")
+		}, 400);
+	})
+	MyPromise.all([jest1,jest2,jest3]).then(res => {
+		console.log(res)
+	})
+
+	MyPromise.race([jest1,jest2,jest3]).then(res => {
+		console.log(res)
+	})
 </script>
 </body>
 </html>

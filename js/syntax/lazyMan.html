@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+<script>
+	class lazyMan {
+		constructor(name) {
+			this.name = name;
+			this.quene = [];
+			const self = this;
+			const fn = () => {
+				console.log(`Hi! This is ${name}`);
+				self.next();
+			}
+			this.quene.push(fn);
+
+			setTimeout(() => {
+				self.next();
+			}, 0)
+		}
+		next() {
+			let fn = this.quene.shift();
+			fn && fn();
+		}
+		sleep(delay) {
+			const self = this;
+			const fn = () => {
+				setTimeout(() => {
+					console.log(`sleep ${delay} s`);
+					self.next();
+				}, delay * 1000);
+			}
+			self.quene.push(fn);
+			return this;
+		}
+		eat(food) {
+			const self = this;
+			const fn = () => {
+				console.log(`eat ${food}`);
+				self.next();
+			}
+			self.quene.push(fn);
+			return this;
+		}
+		sleepFist(delay) {
+			const self = this;
+			const fn = () => {
+				setTimeout(() => {
+					console.log(`sleepFirst ${delay} s`);
+					self.next();
+				}, delay * 1000);
+			}
+			self.quene.unshift(fn);
+			return this;
+		}
+	}
+	const lazy = new lazyMan("chunlei");
+	lazy.sleep(1).sleepFist(2).eat("dinner");
+</script>
+</body>
+</html>
