@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		const isTrue = obj => (typeof obj === 'object' || typeof obj === 'function') && (obj !== null);
+		const deepClone = function(target, map = new WeakMap()) {
+			if(target.constructor === Date) return new Date(target); //判断是否是日期对象
+			if(target.constructor === RegExp) return new RegExp(target); //判断是否是正则
+			if(map.has(target)) return map.get(target);
+
+			let allDesc = Object.getOwnPropertyDescriptors(target);
+			let cloneObj= Object.create(Object.getPrototypeOf(target), allDesc);
+			map.set(target, cloneObj);
+			//Reflect.ownKeys() 返回一个由目标对象自身的属性键组成的数组。使用for of拿值
+			//Object.getOwnPropertyDescriptors(target)返回一个由目标对象自身的属性键组成的对象，使用for in
+			for(let prop in allDesc) {
+				cloneObj[prop] = (isTrue(target[prop]) && typeof target[prop] !== "function") ? deepClone(target[prop], map) : target[prop];
+			}
+			return cloneObj;
+		} 
+
+		let obj = {
+		  num: 0,
+		  str: '',
+		  boolean: true,
+		  unf: undefined,
+		  nul: null,
+		  obj: { name: '我是一个对象', id: 1 },
+		  arr: [0, 1, 2],
+		  func: function () { console.log('我是一个函数') },
+		  date: new Date(0),
+		  reg: new RegExp('/我是一个正则/ig'),
+		  [Symbol('1')]: 1,
+		};
+		Object.defineProperty(obj, 'innumerable', {
+		  enumerable: false, value: '不可枚举属性' }
+		);
+		obj = Object.create(obj, Object.getOwnPropertyDescriptors(obj))
+		obj.loop = obj    // 设置loop成循环引用的属性
+		let cloneObj = deepClone(obj)
+		cloneObj.arr.push(4)
+		console.log('obj', obj)
+		console.log('cloneObj', cloneObj)
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>						
