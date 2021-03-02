@@ -83,17 +83,7 @@
     });
 
 
-    const quickSort = (arr) => {
-    	if(arr.length<=1) return arr;
-    	let left = [],
-    		right = [],
-    		pivot = arr.splice(0,1);
-		for(let i=0; i<arr.length; i++) {
-			arr[i]>pivot ? right.push(arr[i]) : left.push(arr[i]);
-		}
-		return quickSort(left).concat(pivot, quickSort(right));
-    }
-    console.log(quickSort([13,43,1,9,22,7,11,1,6,9]));
+    
     
     class eventEmitter {
     	constructor() {
@@ -106,23 +96,6 @@
     		this.event[eventName] && this.event[eventName].forEach(fn => fn());
     	}
     }
-
-    const mergeSort = (arr) => {
-    	if(arr.length<=1) return arr;
-    	let len = arr.length,
-    		mid = Math.floor(len/2),
-    		left = arr.slice(0, mid),
-    		right = arr.slice(mid);
-		return mergeList(mergeSort(left), mergeSort(right));
-    }
-    const mergeList = (left, right) => {
-    	let result = [];
-    	while(left.length && right.length) {
-    		left[0]>right[0] ? result.push(right.shift()) : result.push(left.shift());
-    	}
-    	return result.concat(left, right);
-    }
-    console.log("归并",mergeSort([13,43,1,9,22,7,11,1,6,9]));
 
 
 
@@ -289,6 +262,40 @@
     sleep(5000).then(res => {
     	console.log(1)
     })
+
+
+
+    const quickSort = function(arr) {
+        if(arr.length<=1) return arr;
+        let pivot = arr.splice(0, 1),
+            left = [],
+            right = [];
+        for(let i=0; i<arr.length; i++) {
+            pivot > arr[i] ? left.push(arr[i]) : right.push(arr[i]);
+        }
+        return quickSort(left).concat(pivot, quickSort(right));
+    }
+    console.log("快排",quickSort([13,43,1,9,22,7,11,1,6,9]));
+
+
+    const mergeSort = function(arr) {
+        if(arr.length<=1) return arr;
+        let mid = Math.floor(arr.length/2),
+            left = arr.slice(0,mid),
+            right = arr.slice(mid); 
+        return mergeList(mergeSort(left), mergeSort(right));
+    }
+    const mergeList = function(left, right) {
+        let result = [];
+        while(left.length && right.length) {
+            left[0] > right[0] ? result.push(right.shift()) : result.push(left.shift());
+        }
+        return result.concat(left, right);
+    }
+
+    console.log("归并",mergeSort([13,43,1,9,22,7,11,1,6,9]));
+
+    
 
 
 </script>
