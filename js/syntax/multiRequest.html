@@ -196,37 +196,74 @@
 			}
 		}
 	}
-	const jest = new MyPromise((resolve,reject) => {
-		setTimeout(function(){
-			reject('err')
-		}, 1000);
-	})
-	jest.then().then().catch(e => {
-		console.log(e);
-	})
+	// const jest = new MyPromise((resolve,reject) => {
+	// 	setTimeout(function(){
+	// 		reject('err')
+	// 	}, 1000);
+	// })
+	// jest.then().then().catch(e => {
+	// 	console.log(e);
+	// })
 
-	const jest1 = new MyPromise((resolve, reject) => {
-   		setTimeout(() => {
-			resolve("done")
-		}, 500);
-	})
-   const jest2 = new MyPromise((resolve, reject) => {
-		setTimeout(() => {
-			resolve("done2")
-		}, 1000);
-	})
-   const jest3 = new MyPromise((resolve, reject) => {
-		setTimeout(() => {
-			resolve("done3")
-		}, 400);
-	})
-	MyPromise.all([jest1,jest2,jest3]).then(res => {
+	// const jest1 = new MyPromise((resolve, reject) => {
+ //   		setTimeout(() => {
+	// 		resolve("done")
+	// 	}, 500);
+	// })
+ //   const jest2 = new MyPromise((resolve, reject) => {
+	// 	setTimeout(() => {
+	// 		resolve("done2")
+	// 	}, 1000);
+	// })
+ //   const jest3 = new MyPromise((resolve, reject) => {
+	// 	setTimeout(() => {
+	// 		resolve("done3")
+	// 	}, 400);
+	// })
+	// MyPromise.all([jest1,jest2,jest3]).then(res => {
+	// 	console.log(res)
+	// })
+
+	// MyPromise.race([jest1,jest2,jest3]).then(res => {
+	// 	console.log(res)
+	// })
+
+	let request = (url) => {
+		return new Promise((resolve, reject) => {
+			setTimeout(function() {
+				resolve(url);
+			}, 1000 * Math.random());
+		});
+	}
+	let backTracking = (list, path) => {
+		return new Promise((resolve, reject) => {
+			const handleUrl = (list) => {
+				const url = list.shift();
+				request(url).then(res => {
+					path.push(res);
+					console.log('每次的结果', res)
+					list.length ? handleUrl(list) : resolve(path);
+				})
+			}
+			handleUrl(list);
+		})
+	}
+	backTracking(['url1', 'url2', 'url3', 'url4'], []).then(res => {
 		console.log(res)
 	})
 
-	MyPromise.race([jest1,jest2,jest3]).then(res => {
-		console.log(res)
-	})
+	let serial = async (list) => {
+		let result = [];
+		for(let i=0; i<list.length; i++) {
+			result[i] = await request(list[i]);
+			console.log('res',result)
+		}
+		console.log(result)
+	}
+	serial(['url1', 'url2', 'url3', 'url4']);
+	// console.log('list',backTracking(['url1', 'url2', 'url3', 'url4'], []));
+
+
 </script>
 </body>
 </html>

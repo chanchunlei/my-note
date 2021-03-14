@@ -2,300 +2,382 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=f, initial-scale=1.0">
+	
 	<title>Document</title>
 </head>
 <body>
 <script>
-	const myInstanceof = function(left, right) {
-		const proto = right.prototype;
-		left = left.__proto__;
-		while(true) {
-			if(left === proto) return true;
-			if(left === null) return false;
-			left = left.__proto__;
-		}
-	}
-	const a = function() {}
-	const b = new a();
-	console.log(myInstanceof(b, a));
-
-	const debounce = function(fn, delay) {
-		let timeout = null;
-		return function() {
-			if(timeout) clearTimeout(timeout);
-			const context = this;
-			timeout = setTimeout(function() {
-				fn.apply(context, [...arguments]);
-			}, delay);
-		}
-	} 
-	const throttle = function(fn, delay) {
-		let flag = false;
-		return function() {
-			if(flag) return;
-			flag = true;
-			const context = this;
-			setTimeout(function() {
-				fn.apply(context, [...arguments]);
-				flag = false;
-			}, delay);
-		}
-	}
-
-
-	const wait = (url) => {
-		return new Promise((resolve, reject) => {
-			setTimeout(() => { resolve(url) }, 1000 * Math.random());
-		})
-	}
-    const multiRequest = (urls, max = 1) => {
-    	return new Promise((resolve, reject) => {
-    		let rest = urls.slice();
-    		let finished = 0;
-    		let currentIdx = 0;
-    		let result = [];
-
-    		const request = async (idx) => {
-    			if(rest.length === 0) return;
-    			currentIdx++;
-    			const url = rest.shift();
-    			try{
-    				const res = await wait(url);
-    				result[idx] = res;
-    				finished++;
-    				console.log(result);
-    			}catch(e) {
-    				reject(e);
-    			}
-
-    			if(finished === urls.length) return resolve(result);
-    			request(currentIdx);
-    		}
-
-    		for(let i=0; i<max; i++) {
-    			request(i);
-    		}
-    	})
+	//节流
+  const debounce = (fn, delay) => {
+    let timeout = null;
+    return function() {
+      if(timeout) clearTimeout(timeout);
+      const context = this;
+      timeout = setTimeout(function() {
+        fn.apply(context, [...arguments]);
+      }, delay);
     }
-    multiRequest([1,3,5,6,9,12,44,56,100], 3).then(res => {
-    	console.log(res)
-    });
-
-
-    
-    
-    class eventEmitter {
-    	constructor() {
-    		this.event = {};
-    	}
-    	on(eventName, callback) {
-    		this.event[eventName] ? this.event[eventName].push(callback) : this.event[eventName] = [callback];
-    	}
-    	emit(eventName) {
-    		this.event[eventName] && this.event[eventName].forEach(fn => fn());
-    	}
+  }
+  //防抖
+  const throttle = (fn, delay) => {
+    let flag = false;
+    return function() {
+      if(flag) return;
+      flag = true;
+      const context = this;
+      setTimeout(function() {
+        fn.apply(context, [...arguments]);
+        flag = false;
+      }, delay);
     }
-
-
-
-    const PENDING = "PENDING";
-    const FULFILLED = "FULFILLED";
-    const REJECTED = "REJECTED";
-    class myPromise {
-    	constructor(executor) {
-    		this.status = PENDING;
-    		this.value = undefined;
-    		this.reason = undefined;
-    		this.onResolvedCallbacks = [];
-    		this.onRejectedCallbacks = [];
-    		let resolve = (value) => {
-    			if(this.status === PENDING) {
-    				this.status = FULFILLED;
-    				this.value = value;
-    				this.onResolvedCallbacks.forEach(fn => fn());
-    			}
-    		}
-    		let reject = (reason) => {
-    			if(this.status === PENDING) {
-    				this.status = REJECTED;
-    				this.reason = reason;
-    				this.onRejectedCallbacks.forEach(fn => fn());
-    			}
-    		}
-    		try{
-    			executor(resolve, reject);
-    		}catch(e) {
-    			reject(e);
-    		}
-    	}
-    	then(onResolved, onRejected) {
-    		const self = this;
-    		let promise2;
-    		onResolved = typeof onResolved === 'function' ? onResolved : v => v;
-    		onRejected = typeof onRejected === 'function' ? onRejected : e => { throw e };
-    		if(self.status === FULFILLED) {
-    			return promise2 = new myPromise((resolve, reject) => {
-    				try{
-    					const x = onResolved(self.value);
-    					if(x instanceof myPromise) x.then(resolve, reject);
-    					resolve(x);
-    				}catch(e) {
-    					reject(e);
-    				}
-    			})
-    		}
-    		if(self.status === REJECTED) {
-    			return promise2 = new myPromise((resolve, reject) => {
-    				try{
-    					const x = onRejected(self.reason);
-    					if(x instanceof myPromise) x.then(resolve, reject);
-    				}catch(e) {
-    					reject(e);
-    				}
-    			})
-    		}
-    		if(self.status === PENDING) {
-    			return promise2 = new myPromise((resolve, reject) => {
-    				self.onResolvedCallbacks.push(() => {
-    					try{
-	    					const x = onResolved(self.value);
-	    					if(x instanceof myPromise) x.then(resolve, reject);
-	    					resolve(x);
-	    				}catch(e) {
-	    					reject(e);
-	    				}
-    				})
-    				self.onRejectedCallbacks.push(() => {
-    					try{
-	    					const x = onRejected(self.reason);
-	    					if(x instanceof myPromise) x.then(resolve, reject);
-	    				}catch(e) {
-	    					reject(e);
-	    				}
-    				})
-    			})
-    		}	
-    	}
-    	catch(onRejected) {
-    		return this.then(null, onRejected);
-    	}
-    	static resolve(value) {
-    		if(value instanceof myPromise) return value;
-    		return new myPromise((resolve, reject) => {
-    			resolve(value);
-    		})
-    	}
-    	static all(values) {
-    		if(Array.isArray(values)) {
-    			return new myPromise((resolve,reject) => {
-    				let idx = 0;
-    				let result = [];
-    				for(let i=0; i<values.length; i++) {
-    					myPromise.resolve(values[i]).then(res => {
-    						result[i] = res;
-    						idx++;
-    						if(idx === values.length) resolve(result);
-    					}).catch(e => {
-    						reject(e);
-    					})
-    				}
-    			})
-    		}else {
-    			return new TypeError('not array');
-    		}
-    	}
-    	static race(values) {
-    		if(Array.isArray(values)) {
-    			return new myPromise((resolve,reject) => {
-    				for(let i=0; i<values.length; i++) {
-    					myPromise.resolve(values[i]).then(res => {
-    						return resolve(res);
-    					}).catch(e => {
-    						reject(e);
-    					})
-    				}
-    			})
-    		}else {
-    			return new TypeError('not array');
-    		}
-    	}
+  }
+  //mycall
+  Function.prototype.myCall = function(context, ...argus) {
+    if(typeof this !== 'function') return new TypeError('not function');
+    context = context || window;
+    context.fn = this;
+    const result = context.fn(...argus);
+    delete context.fn;
+    return result;
+  }
+  //myapply
+  Function.prototype.myApply = function(context, arr) {
+    if(typeof this !== 'function') return new TypeError('not function');
+    context = context || window;
+    context.fn = this;
+    const result = context.fn(...arr);
+    delete context.fn;
+    return result;
+  }
+  //mybind
+  Function.prototype.myBind = function(context, ...argus) {
+    if(typeof this !== 'function') return new TypeError('not function');
+    const _this = this;
+    return function F() {
+      if(this instanceof F) return new _this(...argus, ...arguments);
+      return _this.myApply(context, [...argus, ...arguments]);
     }
-    const jest = new myPromise((resolve, reject) => {
-    	setTimeout(() => {
-    		resolve("done");
-    	}, 3000)
-    })
- 	jest.then().then().then(res => {
- 		console.log('res', res)
- 	}).catch(e => {
- 		console.log('reject', e)
- 	})
-
- 	const jest1 = new myPromise((resolve, reject) => {
-    	setTimeout(() => {
-    		resolve("done1");
-    	}, 3000)
-    })
-    const jest2 = new myPromise((resolve, reject) => {
-    	setTimeout(() => {
-    		resolve("done2");
-    	}, 400)
-    })
-    const jest3 = new myPromise((resolve, reject) => {
-    	setTimeout(() => {
-    		resolve("done3");
-    	}, 1000)
-    })
-    myPromise.all([jest, jest1, jest2, jest3]).then(res => {
-    	console.log('all', res)
-    })
-    myPromise.race([jest, jest1, jest2, jest3]).then(res => {
-    	console.log('race', res)
-    })
-
-    const sleep = delay => {
-    	return new Promise((resolve, rejcet) => {
-    		setTimeout(resolve, delay);
-    	})
+  }
+  //数组扁平化; (回溯) ✨✨✨✨✨✨✨✨✨✨
+  const flattenArray = (arr, result = []) => { 
+    if(!Array.isArray(arr)) return new TypeError('not array');
+    for(let i=0; i<arr.length; i++) {
+      Array.isArray(arr[i]) ? flattenArray(arr[i], result) : result.push(arr[i]);
     }
-    sleep(5000).then(res => {
-    	console.log(1)
-    })
-
-
-
-    const quickSort = function(arr) {
-        if(arr.length<=1) return arr;
-        let pivot = arr.splice(0, 1),
-            left = [],
-            right = [];
-        for(let i=0; i<arr.length; i++) {
-            pivot > arr[i] ? left.push(arr[i]) : right.push(arr[i]);
+    return result;
+  }
+  flattenArray([1,[3,[4,5,23, [34, 5,[0]]]]])
+  //promise
+  const PENDING = "PENDING";
+  const FULFILLED = "FULFILLED";
+  const REJECTED = "REJECTED";
+  class MyPromise {
+    constructor(executor) {
+      this.status = PENDING;
+      this.value = undefined;
+      this.reason = undefined;
+      this.onResolvedCallbacks = [];
+      this.onRejectedCallbacks = [];
+      let resolve = (value) => {
+        if(this.status === PENDING) {
+          this.status = FULFILLED;
+          this.value = value;
+          this.onResolvedCallbacks.forEach(fn => fn())
         }
-        return quickSort(left).concat(pivot, quickSort(right));
-    }
-    console.log("快排",quickSort([13,43,1,9,22,7,11,1,6,9]));
-
-
-    const mergeSort = function(arr) {
-        if(arr.length<=1) return arr;
-        let mid = Math.floor(arr.length/2),
-            left = arr.slice(0,mid),
-            right = arr.slice(mid); 
-        return mergeList(mergeSort(left), mergeSort(right));
-    }
-    const mergeList = function(left, right) {
-        let result = [];
-        while(left.length && right.length) {
-            left[0] > right[0] ? result.push(right.shift()) : result.push(left.shift());
+      }
+      let reject = (reason) => {
+        if(this.status === PENDING) {
+          this.status = REJECTED;
+          this.reason = reason;
+          this.onRejectedCallbacks.forEach(fn => fn())
         }
-        return result.concat(left, right);
+      }
+      try{
+        executor(resolve, reject);
+      }catch(e) {
+        reject(e);
+      }
     }
+    then(onResolved, onRejected) {
+      const self = this;
+      let promise2;
+      onResolved = typeof onResolved === 'function' ? onResolved : v => v;
+      onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
+      if(self.status === FULFILLED) {
+        return promise2 = new MyPromise((resolve, reject) => {
+          try{
+            const x = onResolved(self.value);
+            if(x instanceof MyPromise) x.then(resolve, reject);
+            resolve(x);
+          }catch(e) { 
+            reject(e)
+          }
+        })
+      }
+      if(self.status === REJECTED) {
+        return promise2 = new MyPromise((resolve, reject) => {
+          try{
+            const x = onRejected(self.reason);
+            if(x instanceof MyPromise) x.then(resolve, reject);
+          }catch(e) { 
+            reject(e)
+          }
+        })
+      }
+      if(self.status === PENDING) {
+        return promise2 = new MyPromise((resolve, reject) => {
+          self.onResolvedCallbacks.push(() => {
+            try{
+              const x = onResolved(self.value);
+              if(x instanceof MyPromise) x.then(resolve, reject);
+              resolve(x);
+            }catch(e) { 
+              reject(e)
+            }
+          })
+          self.onRejectedCallbacks.push(() => {
+            try{
+              const x = onRejected(self.reason);
+              if(x instanceof MyPromise) x.then(resolve, reject);
+            }catch(e) { 
+              reject(e)
+            }
+          })
+        })
+      }
+    }
+    catch(onRejected) {
+      return this.then(null, onRejected);
+    }
+    static resolve(value) {
+      if(value instanceof MyPromise) return value;
+      return new MyPromise((resolve, reject) => {
+        resolve(value);
+      })
+    }
+    static all(values) {
+      if(Array.isArray(values)) {
+        return new MyPromise((resolve, reject) => {
+          let idx = 0;
+          let result = [];
+          for(let i=0; i<values.length; i++) {
+            MyPromise.resolve(values[i]).then(res => {
+              result[i] = res;
+              idx++;
+              if(idx === values.length) resolve(result);
+            }).catch(e => {
+              reject(e);
+            })
+          }
+        })
+      }else {
+        return new TypeError('arguments not array')
+      }
+    }
+    static race(values) {
+      if(Array.isArray(values)) {
+        return new MyPromise((resolve, reject) => {
+          for(let i=0; i<values.length; i++) {
+            MyPromise.resolve(values[i]).then(res => {
+              return resolve(res);
+            }).catch(e => {
+              return reject(e);
+            })
+          }
+        })
+      }else {
+        return new TypeError('arguments not array')
+      }
+    }
+  }
 
-    console.log("归并",mergeSort([13,43,1,9,22,7,11,1,6,9]));
 
-    
+  //deepclone
+  const isTrue = obj => (typeof obj === 'object' || typeof obj === 'function') && obj != null; 
+  const deepClone = (target, map = new WeakMap()) => {
+    if(target.constructor === Date) return new Date(target);
+    if(target.constructor === RegExp) return new RegExp(target);
+    if(map.has(target)) return map.get(target);
+    const allDesc = Object.getOwnPropertyDescriptors(target);
+    const cloneTarget = Object.create(Object.getPrototypeOf(target), allDesc);
+    map.set(target, cloneTarget);
+    for(let prop in allDesc) {
+      cloneTarget[prop] = typeof target[prop] !== 'function' && isTrue(target[prop]) ? deepClone(target[prop], map) : target[prop];
+    }
+    return cloneTarget;
+  }
+  //日常简单够用
+  const deepCloneV2 = (target, map = new WeakMap()) => { 
+    if(typeof target !== "object" || target === null) return target;
+    if(map.get(target)) return target;
+    const cloneTarget = Array.isArray(target) ? [] : {};
+    map.set(target, true);
+    for(let prop in target) {
+      cloneTarget[prop] = target.hasOwnProperty(prop) ? deepCloneV2(target[prop], map) : target[prop];
+    }
+    return cloneTarget;
+  }
+
+  //柯里化
+  const carry = function() {
+    const argus = [...arguments];
+    function fn() {
+      argus.push(...arguments);
+      return fn;
+    }
+    fn.valueOf = () => argus.reduce((a,b) => a+b);
+    return fn;
+  }
+  console.log(+carry(1)(2)(3)(4),+carry(1)(1,2,3)(2));
+
+  //控制并发
+  const wait = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, Math.random() * 2000);
+    })
+  }
+  const multiRequest = (urls, max = 1) => {
+    return new Promise((resolve, reject) => {
+      let rest = urls.slice();
+      let currentIndex = 0;
+      let finished = 0;
+      let result = [];
+      const request = async (idx) => {
+        if(rest.length === 0) return;
+        const url = rest.shift();
+        currentIndex++;
+        try{
+          await wait();
+        }catch(e) {
+          reject(e);
+        }
+        finished++;
+        result[idx] = url;
+        console.log('result', result);
+        if(finished === urls.length) return resolve(result);
+        request(currentIndex); //这一步不能忘
+      }
+      for(let i=0; i<max; i++) {
+        request(i);
+      }
+    })
+  }
+  multiRequest(["1", "2", "3", "4", "5", 6, 7, 8, 9, 10], 3).then((res) =>
+      console.log("res", res),
+  )
+
+  //quickSort
+  const quickSort = (arr) => {
+    if(arr.length<=1) return arr;
+    let pivot = arr.splice(0,1), left = [], right = [];
+    for(let i=0; i<arr.length; i++) {
+      arr[i]>pivot ? right.push(arr[i]) : left.push(arr[i]);
+    }
+    return quickSort(left).concat(pivot, quickSort(right));
+  }
+  console.log("quickSort",quickSort([5,2,7,12,55,12,33,54,55,66,19,10]))
+  //mergeSort
+  const mergeSort = (arr) => {
+    if(arr.length<=1) return arr;
+    let len = arr.length, mid = Math.floor(len/2);
+    let left = arr.slice(0, mid), right = arr.slice(mid);
+    return merge(mergeSort(left), mergeSort(right));
+  }
+  const merge = (left, right) => {
+    let result = [];
+    while(left.length && right.length) {
+      left[0]>right[0] ? result.push(right.shift()) : result.push(left.shift());
+    }
+    return result.concat(left, right)
+  }
+  console.log("mergeSort",mergeSort([5,2,7,12,55,12,33,54,55,66,19,10]));
+  
+
+  //sleep
+  const sleep = (time) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(function(){
+        resolve('done')
+      }, time*1000);
+    })
+  }
+  sleep(5).then(res => {
+    console.log('sleep')
+  }) 
+
+  //emit
+  class EventEmit {
+    constructor() {
+      this.events = {};
+    }
+    static on(eventName, callback) {
+      this.events[eventName] ? this.events[eventName].push(callback) : this.events[eventName] = [callback];
+    }
+    static emit(eventName) {
+      this.events[eventName] && this.events[eventName].forEach(fn => fn());
+    }
+  }
+
+  //layzMan 写成function比较好
+  class lazyMan{
+    constructor(name) {
+      this.name = name;
+      this.queue = [];
+      const that = this;
+      let fn = function() {
+        setTimeout(function() {
+          console.log('Hi! This is'+ that.name);
+          that.next();
+        },0)
+      }
+      this.queue.push(fn);
+      setTimeout(() => {
+        that.next();
+      }, 0)
+    }
+    next() {
+      let fn = this.queue.shift();
+      fn && fn();
+    }
+    sleep(time) {
+      const that = this;
+      const fn = function() {
+        setTimeout(function() {
+          console.log('wake up'+ time);
+          that.next();
+        }, time*1000)
+      }
+      this.queue.push(fn);
+      return this;
+    }
+    eat(dinner) {
+      const that = this;
+      const fn = function() {
+        setTimeout(function() {
+          console.log('eat'+ dinner);
+          that.next();
+        }, 0)
+      }
+      this.queue.push(fn);
+      return this;
+    }
+     sleepFirst(time) {
+      const that = this;
+      const fn = function() {
+        setTimeout(function() {
+          console.log('sleetFirst wake up'+ time);
+          that.next();
+        }, time*1000)
+      }
+      this.queue.unshift(fn);
+      return this;
+    }
+  }
+  const Man = new lazyMan("Hank");
+  Man.sleepFirst(5).eat("supper")
+
+
+
 
 
 </script>

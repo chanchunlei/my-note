@@ -7,213 +7,6 @@
 </head>
 <body>
 <script>
-	
-	// const PENDING = "PENDING";
-	// const FULFILLED = "FULFILLED";
-	// const REJECTED = "REJECTED";
-
-	// function MyPromise(executor) {
-	// 	const self = this;
-	// 	self.status = PENDING;
-	// 	self.value = undefined;
-	// 	self.reason = undefined;
-
-	// 	self.onResolvedCallbacks = [];
-	// 	self.onRejectedCallbacks = [];
-
-	// 	function resolve(value) {
-	// 		if(self.status === PENDING) {
-	// 			self.status = FULFILLED;
-	// 			self.value = value;
-	// 			self.onResolvedCallbacks.forEach(fn => fn());
-	// 		}
-	// 	};
-	// 	function reject(reason) {
-	// 		if(self.status === PENDING) {
-	// 			self.status = REJECTED;
-	// 			self.reason = reason;
-	// 			self.onRejectedCallbacks.forEach(fn => fn())
-	// 		}
-	// 	};
-	// 	try {
-	// 		executor(resolve, reject);
-	// 	}catch (error) {
-	// 		reject(error);
-	// 	}
-		
-	// }
-	// MyPromise.prototype.then = function(onFulfilled, onRejected) {
-	// 	const self = this;
-	// 	if(self.status === FULFILLED) {
-	// 		onFulfilled(self.value);
-	// 	}
-	// 	if(self.status === REJECTED) {
-	// 		onRejected(self.reason);
-	// 	}
-	// 	if(self.status === PENDING) {
-	// 		self.onResolvedCallbacks.push(() => {
-	// 			onFulfilled(self.value);
-	// 		})
-	// 		self.onRejectedCallbacks.push(() => {
-	// 			onRejected(self.reason);
-	// 		})
-	// 	}
-	// }
-
-	/*
-	const PENDING = "PENDING";
-	const FULFILLED = "FULFILLED";
-	const REJECTED = "REJECTED";
-
-	class MyPromise {
-		constructor(executor) {
-			this.status = PENDING;
-			this.value = undefined;
-			this.reason = undefined;
-
-			//解决异步，将成功回调存入
-			this.onResolvedCallbacks = [];
-			//解决异步，将失败回调存入
-			this.onRejectedCallbacks = [];
-
-			let resolve = (value) => {
-				if(this.status === PENDING) {
-					this.status = FULFILLED;
-					this.value = value;
-					this.onResolvedCallbacks.forEach(fn => fn());
-				}
-			}
-			let reject = (reason) => {
-				if(this.status === PENDING) {
-					this.status = REJECTED;
-					this.reason = reason;
-					this.onRejectedCallbacks.forEach(fn => fn());
-				}
-			}
-
-			try {
-				executor(resolve, reject);
-			}catch(error) {
-				reject(error);
-			}
-		}
-
-		//prototype
-		//then返回一个新的promise对象
-		then(onResolved, onRejected) {
-			let promise2;
-			const self = this;
-
-			//函数返回value或者err，处理值穿透
-			onResolved = typeof onResolved === 'function' ? onResolved : v => v;
-			onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
-
-		    
-			if(self.status === FULFILLED) {
-				return (promise2 = new MyPromise((resolve, reject) => {
-                 	try {
-                 		const x = onResolved(self.value);
-                 		if(x instanceof MyPromise) x.then(resolve, reject);
-                 		resolve(x);
-                 	} catch (e) {
-                 		reject(e)
-                 	}
-				}));
-			
-			}
-			if(self.status === REJECTED) {
-				return (promise2 = new MyPromise((resolve, reject) => {
-					try {
-						const x = onRejected(self.reason);
-						if(x instanceof MyPromise) x.then(resolve, reject);
-					} catch(e) {
-						reject(e)
-					}
-				}));
-				//onRejected(self.reason);
-			}
-			if(self.status === PENDING) {
-				return (promise2 = new MyPromise((resolve, reject) => {
-					self.onResolvedCallbacks.push(() => {
-						try {
-                 		const x = onResolved(self.value);
-                 		if(x instanceof MyPromise) x.then(resolve, reject);
-                 		resolve(x);
-	                 	} catch (e) {
-	                 		reject(e)
-	                 	}
-					});
-					self.onRejectedCallbacks.push(() => {
-						try {
-                 		const x = onRejected(self.reason);
-                 		if(x instanceof MyPromise) x.then(resolve, reject);
-	                 	} catch (e) {
-	                 		reject(e)
-	                 	}
-					})
-				}));
-				
-			}
-		}
-		catch(onRejected) { //catch基于then
-			return this.then(null, onRejected);
-		}
-		all(values) {
-			if(Array.isArray(values)) {
-				return new Promise((resolve, reject) => {
-					let resultArr = [];
-					let orderIndex = 0;
-					const processResultByKey = (data, index) => {
-						resultArr[index] = data;
-						if(++orderIndex === values.length) {
-							resolve(resultArr);
-						}
-					}
-
-					for(let i=0; i<values.length; i++) {
-						let data = values[i];
-						if(data && typeof data.then === 'function') {
-							data.then((res) => {
-								processResultByKey(res, i);
-							}, reject);
-						}else {
-							processResultByKey(data, i);
-						}
-					}
-				})
-			}else {
-				return new TypeError("not array")
-			}
-		}
-		rece(promises) {
-			return new Promise((resolve, reject) => {
-				for(let i=0; i<promises.length; i++) {
-					let val = promises[i];
-					if(val && typeof val.then === 'function') {
-						val.then(resolve,reject);
-					}else {
-						resolve(val);
-					}
-				}
-			})
-		}
-	}
-
-	const jest = new MyPromise((resolve, reject) => {
-		setTimeout(() => {
-			resolve("done")
-		}, 1000);
-	})
-	jest.then().then().then()
-	.then((res) => {
-		console.log(res);
-	}, (err) => {
-		console.log(err);
-	});
-	//以上实现到了
-	//then的链式调用和值穿透
-    
-   */
 
   	const PENDING = "PENDING";
   	const FULFILLED = "FULFILLED";
@@ -341,31 +134,36 @@
 
 
 
-   const jest = new MyPromise((resolve, reject) => {
-   		setTimeout(() => {
-			resolve("done")
-		}, 500);
-		// setTimeout(() => {
-		// 	resolve("done")
-		// }, 1000);
-	})
-   const jest2 = new MyPromise((resolve, reject) => {
-		setTimeout(() => {
-			resolve("done2")
-		}, 1000);
-	})
-   const jest3 = new MyPromise((resolve, reject) => {
-		setTimeout(() => {
-			resolve("done3")
-		}, 400);
-	})
-	MyPromise.all([jest,jest2,jest3]).then(res => {
-		console.log(res)
-	})
+  const jest = new MyPromise((resolve, reject) => {
+	  setTimeout(() => {
+	  resolve("done")
+	    }, 500);
+	    // setTimeout(() => {
+	    //  resolve("done")
+	    // }, 1000);
+	  })
+	   const jest2 = new MyPromise((resolve, reject) => {
+	    setTimeout(() => {
+	      reject("done2")
+	    }, 1000);
+	  })
+	   const jest3 = new MyPromise((resolve, reject) => {
+	    setTimeout(() => {
+	      resolve("done3")
+	    }, 400);
+	  })
+	  jest.then()
+	  jest.then()
+	  jest.then(res => {
+	    console.log("jest",res)
+	  })
+	  MyPromise.all([jest,jest2,jest3]).then(res => {
+	    console.log(res)
+	  }).catch(e => {console.log(e)})
 
-	MyPromise.race([jest,jest2,jest3]).then(res => {
-		console.log(res)
-	})
+	  MyPromise.race([jest,jest2,jest3]).then(res => {
+	    console.log(res)
+	  })
 
 
 

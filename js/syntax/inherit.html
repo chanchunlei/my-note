@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+<script>
+	//js的特性，封装，继承，多态
+	//继承的实现
+ 
+  //1.原型链继承
+  function Parent1() {
+  	this.name = 'paremt1';
+  	this.play = [1,2,3];
+  } 
+  function child1() {
+  	this.type = 'child1';
+  }
+  child1.prototype = new Parent1();
+  console.log(new child1);
+  //上面代码，child1是可以访问到父类的属性
+  //但是
+  var s1 = new child1();
+  var s2 = new child1();
+  s1.play.push(4);
+  console.log(s1.play, s2.play); //[1,2,3,4],[1,2,3,4]
+  //公用了原型空间
+
+
+  //2.构造函数继承(借助call)
+  function Parent2() {
+  	this.name = 'parent2';
+  	this.play = [1,2,3];
+  }
+  Parent2.prototype.getName = function() {
+  	console.log(this.name);
+  }
+  function child2() {
+  	Parent2.call(this);
+  	this.type = 'child1';
+  }
+  var cl2 = new child2();
+  console.log(cl2)
+  // console.log(cl2.getName);//报错没有这个属性
+
+
+  //3.组合继承（以上两种方式的组合）
+  function Parent3() {
+  	this.name = 'parent3';
+  	this.play = [1,2,3];
+  }
+  Parent3.prototype.getName = function() {
+  	return this.name;
+  }
+  function Child3() {
+  	Parent3.call(this);
+  	this.type = "child3";
+  }
+  Child3.prototype = new Parent3();
+  Child3.prototype.constructor = Child3;
+  var s3 = new Child3();
+  var s4 = new Child3();
+  s4.play.push(4);
+  console.log(s3.play, s4.play); //不影响
+  console.log(s3.getName());  //正常
+  console.log(s4.getName());  //正常
+
+
+
+  //4.原型式继承
+
+  //5.寄生式继承
+
+  //6.寄生组合式继承
+
+</script>
+</body>
+</html>
